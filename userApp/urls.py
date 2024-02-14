@@ -6,5 +6,8 @@ urlpatterns = [
     path('all/', UserListAPIView.as_view()),
     path('update/', UserUpdateAPIView.as_view()),
     path('delete/', UserDestroyAPIView.as_view()),
-    path('retrieve/', UserRetrieveAPIView.as_view())
+    path('retrieve/', UserRetrieveAPIView.as_view()),
+
+    path('rating/create/', RatingCreateAPIView.as_view()),
+
 ]

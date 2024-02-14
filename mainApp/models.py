@@ -38,9 +38,12 @@ class Product(CoreModel):
     discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)])
     guaranty = models.CharField(max_length=30, blank=True, null=True)
     deliver = models.CharField(max_length=30, blank=True, null=True)
+    avg_rating = models.FloatField(validators=[MinValueValidator(0)], blank=True, null=True)
     subCategory = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, blank=True, null=True)
     owner = models.ForeignKey(Owner, on_delete=models.SET_NULL, blank=True, null=True)
 
+    def __str__(self):
+        return self.name
 
 class ProductImage(CoreModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

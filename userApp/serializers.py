@@ -70,3 +70,8 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ('id', 'user', 'product', 'rating', 'created_at', 'updated_at')

@@ -3,6 +3,7 @@ from rest_framework import generics, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import *
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import CustomUser
 from .serializers import *
@@ -51,3 +52,22 @@ class UserDestroyAPIView(generics.DestroyAPIView):
         user.delete()
         custom_user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class RatingCreateAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        serializer = RatingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            product = get_object_or_404(Product, id=serializer.data.get('product'))
+            product_rating = Rating.objects.filter(product=product).values_list('rating', flat=True)
+            if product_rating:
+                r = sum(product_rating) / len(product_rating)
+            else:
+                r = None
+            product.avg_rating = r
+            product.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
