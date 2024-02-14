@@ -11,12 +11,12 @@ from django.conf.urls.static import static
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Snippets API",
+        title="Ecommerce API",
         default_version='v1',
-        description="Test description",
+        description="Ecommerce REST API for Web",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
-        license=openapi.License(name="BSD License"),
+        contact=openapi.Contact(email="otabecktursunov@gmail.com"),
+        license=openapi.License(name="Codial Team"),
     ),
     public=True,
 )
