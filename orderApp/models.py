@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from coreApp.models import CoreModel
-from mainApp.models import Product
+from mainApp.models import *
+from coreApp.models import *
 
 
 class Region(CoreModel):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, validators=[MinLengthValidator(2)])
 
     def __str__(self):
         return self.name

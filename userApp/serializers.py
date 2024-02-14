@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
-            email=validated_data.get('email', ""),
+            email=validated_data.get('email', None),
             first_name=validated_data.get('first_name', ""),
             last_name=validated_data.get('last_name', "")
         )
@@ -34,10 +34,10 @@ class UserSerializer(serializers.ModelSerializer):
         customUser = CustomUser.objects.create(
             username=validated_data['username'],
             password=validated_data['password'],
-            email=validated_data.get('email', ""),
+            email=validated_data.get('email', None),
             first_name=validated_data.get('first_name', ""),
             last_name=validated_data.get('last_name', ""),
-            phone_number=validated_data.get('phone_number', ""),
+            phone_number=validated_data.get('phone_number', None),
             city=validated_data.get('city', None),
             address=validated_data.get('address', ""),
             user=user
