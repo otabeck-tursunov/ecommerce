@@ -40,3 +40,19 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description', 'price', 'amount', 'discount', 'guaranty', 'deliver', 'owner', 'subCategory',
             'created_at', 'updated_at')
+
+
+class ProductCascadeSerializer(serializers.ModelSerializer):
+    subCategory = SubCategoryCascadeSerializer()
+
+    class Meta:
+        model = Product
+        fields = ('id', 'name', 'subCategory')
+
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    product = ProductCascadeSerializer()
+
+    class Meta:
+        model = ProductImage
+        fields = ('id', 'image', 'product', 'created_at', 'updated_at')

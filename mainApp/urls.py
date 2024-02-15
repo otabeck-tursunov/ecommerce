@@ -9,5 +9,7 @@ urlpatterns = [
     path('sub-categories/<int:pk>/', SubCategoryRetrieveAPIView.as_view()),
 
     path('products/', ProductListAPIView.as_view()),
-    path('products/<int:pk>/', ProductRetrieveAPIView.as_view())
+    path('products/<int:pk>/', ProductRetrieveAPIView.as_view()),
+
+    path('products/<int:pk>/images/', ProductImageAPIView.as_view()),
 ]
