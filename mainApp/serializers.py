@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from userApp.models import Rating
+from extraApp.serializers import *
 from .models import *
 
 
@@ -32,14 +33,25 @@ class SubCategoryCascadeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'category')
 
 
+class OwnerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Owner
+        fields = ('id', 'name', 'phone_number', 'email', 'company', 'address', 'created_at', 'updated_at')
+
+
 class ProductSerializer(serializers.ModelSerializer):
     subCategory = SubCategoryCascadeSerializer()
+    display = DisplaySerializer()
+    processor = ProcessorSerializer()
+    ram = RAMSerializer()
+    videocard = VideoCardSerializer()
+    camera = CameraSerializer()
 
     class Meta:
         model = Product
         fields = (
             'id', 'name', 'description', 'price', 'amount', 'discount', 'guaranty', 'deliver', 'owner', 'subCategory',
-            'created_at', 'updated_at')
+            'created_at', 'updated_at', 'display', 'processor', 'ram', 'videocard', 'camera')
 
 
 class ProductCascadeSerializer(serializers.ModelSerializer):

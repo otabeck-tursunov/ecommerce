@@ -26,6 +26,7 @@ urlpatterns = [
     path('main/', include('mainApp.urls')),
     path('order/', include('orderApp.urls')),
     path('user/', include('userApp.urls')),
+    path('extra/', include('extraApp.urls')),
 
     # SimpleJWT Token
     path('token/', TokenObtainPairView.as_view()),

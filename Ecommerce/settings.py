@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'mainApp',
     'userApp',
     'orderApp',
+    'extraApp',
 
     # Packages
     'rest_framework',

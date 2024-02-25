@@ -37,11 +37,24 @@ class SubCategoryRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = SubCategorySerializer
 
 
-class ProductListAPIView(generics.ListAPIView):
+class OwnerRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = [AllowAny, ]
 
-    queryset = Product.objects.all()
+    queryset = Owner.objects.all()
+    serializer_class = OwnerSerializer
+
+
+class ProductListAPIView(generics.ListAPIView):
+    permission_classes = [AllowAny, ]
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        products = Product.objects.all()
+        if self.request.query_params.get('category_id'):
+            products = products.filter(subCategory__category__id=self.request.query_params.get('category_id'))
+        if self.request.query_params.get('subCategory_id'):
+            products = products.filter(subCategory__id=self.request.query_params.get('subCategory_id'))
+        return products
 
 
 class ProductRetrieveAPIView(generics.RetrieveAPIView):

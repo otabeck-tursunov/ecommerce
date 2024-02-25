@@ -21,7 +21,7 @@ class SubCategory(CoreModel):
 
 class Owner(CoreModel):
     name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(max_length=254, blank=True, null=True)
     company = models.CharField(max_length=255, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
@@ -38,6 +38,8 @@ class Product(CoreModel):
     discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)])
     guaranty = models.CharField(max_length=30, blank=True, null=True)
     deliver = models.CharField(max_length=30, blank=True, null=True)
+    battery = models.BooleanField(blank=True, null=True)
+    color = models.CharField(max_length=30, blank=True, null=True)
     avg_rating = models.FloatField(validators=[MinValueValidator(0)], blank=True, null=True)
     subCategory = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, blank=True, null=True)
     owner = models.ForeignKey(Owner, on_delete=models.SET_NULL, blank=True, null=True)
