@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from rest_framework import generics, status
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import generics, status, filters
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import *
 from rest_framework.response import Response
@@ -44,17 +46,33 @@ class OwnerRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = OwnerSerializer
 
 
-class ProductListAPIView(generics.ListAPIView):
+class ProductsAPIView(APIView):
     permission_classes = [AllowAny, ]
-    serializer_class = ProductSerializer
 
-    def get_queryset(self):
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name="category_id",
+                in_=openapi.IN_QUERY,
+                description="Filter by Category ID",
+                type=openapi.TYPE_INTEGER,
+            ),
+            openapi.Parameter(
+                name="subCategory_id",
+                in_=openapi.IN_QUERY,
+                description="Filter by SubCategory ID",
+                type=openapi.TYPE_INTEGER
+            )
+        ],
+    )
+    def get(self, request):
         products = Product.objects.all()
-        if self.request.query_params.get('category_id'):
-            products = products.filter(subCategory__category__id=self.request.query_params.get('category_id'))
-        if self.request.query_params.get('subCategory_id'):
-            products = products.filter(subCategory__id=self.request.query_params.get('subCategory_id'))
-        return products
+        if self.request.query_params.get("category_id"):
+            products = products.filter(subCategory__category__id=self.request.query_params.get("category_id"))
+        if self.request.query_params.get("subCategory_id"):
+            products = products.filter(subCategory__id=self.request.query_params.get("subCategory_id"))
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ProductRetrieveAPIView(generics.RetrieveAPIView):
