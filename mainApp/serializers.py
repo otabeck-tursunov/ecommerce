@@ -68,3 +68,4 @@ class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
         fields = ('id', 'image', 'product', 'created_at', 'updated_at')
+

@@ -25,14 +25,28 @@ class CategoryRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = CategorySerializer
 
 
-class SubCategoryListAPIView(generics.ListAPIView):
+class SubCategoriesAPIView(APIView):
     permission_classes = [AllowAny, ]
 
-    queryset = SubCategory.objects.all()
-    serializer_class = SubCategorySerializer
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name='category_id',
+                in_=openapi.IN_QUERY,
+                description="Filter by Category ID",
+                type=openapi.TYPE_INTEGER,
+            )
+        ]
+    )
+    def get(self, request):
+        subCategories = SubCategory.objects.all()
+        if request.query_params.get('category_id'):
+            subCategories = subCategories.filter(category__id=request.query_params.get('category_id'))
+        serializers = SubCategorySerializer(subCategories, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
 
-class SubCategoryRetrieveAPIView(generics.RetrieveAPIView):
+class SubCategoryRetrieveAPIView(APIView):
     permission_classes = [AllowAny, ]
 
     queryset = SubCategory.objects.all()
