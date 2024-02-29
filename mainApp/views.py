@@ -81,16 +81,19 @@ class ProductsAPIView(APIView):
     )
     def get(self, request):
         products = Product.objects.all()
-        if self.request.query_params.get("category_id"):
-            products = products.filter(subCategory__category__id=self.request.query_params.get("category_id"))
-        if self.request.query_params.get("subCategory_id"):
-            products = products.filter(subCategory__id=self.request.query_params.get("subCategory_id"))
         data = []
         for product in products:
             product_data = ProductSerializer(product).data
             images = ProductImage.objects.filter(product=product)
-            image_data = ProductImageSerializer(images, many=True).data
-            product_data['images'] = image_data
+            img_main = None
+            img_sub = []
+            for image in images:
+                if not img_main:
+                    img_main = image.image.url
+                else:
+                    img_sub.append(image.image.url)
+            product_data['img_main'] = img_main
+            product_data['img_sub'] = img_sub
             data.append(product_data)
         return Response(data, status=status.HTTP_200_OK)
 
@@ -99,15 +102,26 @@ class ProductAPIView(APIView):
     permission_classes = [AllowAny, ]
 
     def get(self, request, pk):
-        product = Product.objects.get(id=pk)
-        product_serializer = ProductSerializer(product)
-        images = ProductImage.objects.filter(product=product)
-        image_serializer = ProductImageSerializer(images, many=True)
-        data = {
-            'product': product_serializer.data,
-            'images': image_serializer.data
-        }
-        return Response(data, status=status.HTTP_200_OK)
+        try:
+            product = Product.objects.get(id=pk)
+            product_serializer = ProductSerializer(product)
+            images = ProductImage.objects.filter(product=product)
+            img_main = None
+            img_sub = []
+            for image in images:
+                if not img_main:
+                    img_main = image.image.url
+                else:
+                    img_sub.append(image.image.url)
+            data = {
+                'product': product_serializer.data,
+                'img_main': img_main,
+                'img_sub': img_sub
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        except Product.DoesNotExist:
+            return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
+
 
 class ProductImageAPIView(APIView):
     permission_classes = [AllowAny, ]
