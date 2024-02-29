@@ -35,8 +35,8 @@ class Product(CoreModel):
     description = models.TextField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0)])
     amount = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(0)])
-    discount = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)])
     guaranty = models.CharField(max_length=30, blank=True, null=True)
+    country = models.CharField(max_length=255, blank=True, null=True)
     deliver = models.CharField(max_length=30, blank=True, null=True)
     battery = models.BooleanField(blank=True, null=True)
     color = models.CharField(max_length=30, blank=True, null=True)
@@ -47,11 +47,10 @@ class Product(CoreModel):
     def __str__(self):
         return self.name
 
+
 class ProductImage(CoreModel):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='products/', blank=True)
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.product.name
-
-

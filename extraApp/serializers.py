@@ -35,4 +35,7 @@ class CameraSerializer(serializers.ModelSerializer):
         fields = ('model', 'type', 'brand', 'pixel_size')
 
 
-
+class DiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        fields = ('amount', 'deadline')

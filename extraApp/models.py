@@ -69,3 +69,14 @@ class Camera(models.Model):
 
     def __str__(self):
         return f'Camera: {self.model} | {self.product.name}'
+
+
+class Discount(models.Model):
+    amount = models.PositiveSmallIntegerField(blank=True, null=True,
+                                              validators=[MinValueValidator(0), MaxValueValidator(99)])
+    deadline = models.DateField(blank=True, null=True)
+
+    product = models.OneToOneField(Product, on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        return f'Discount: {self.amount} | {self.deadline}'

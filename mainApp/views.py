@@ -85,16 +85,29 @@ class ProductsAPIView(APIView):
             products = products.filter(subCategory__category__id=self.request.query_params.get("category_id"))
         if self.request.query_params.get("subCategory_id"):
             products = products.filter(subCategory__id=self.request.query_params.get("subCategory_id"))
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = []
+        for product in products:
+            product_data = ProductSerializer(product).data
+            images = ProductImage.objects.filter(product=product)
+            image_data = ProductImageSerializer(images, many=True).data
+            product_data['images'] = image_data
+            data.append(product_data)
+        return Response(data, status=status.HTTP_200_OK)
 
 
-class ProductRetrieveAPIView(generics.RetrieveAPIView):
+class ProductAPIView(APIView):
     permission_classes = [AllowAny, ]
 
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
+    def get(self, request, pk):
+        product = Product.objects.get(id=pk)
+        product_serializer = ProductSerializer(product)
+        images = ProductImage.objects.filter(product=product)
+        image_serializer = ProductImageSerializer(images, many=True)
+        data = {
+            'product': product_serializer.data,
+            'images': image_serializer.data
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
 class ProductImageAPIView(APIView):
     permission_classes = [AllowAny, ]

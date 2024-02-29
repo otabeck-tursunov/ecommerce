@@ -11,7 +11,7 @@ urlpatterns = [
     path('owners/<int:pk>/', OwnerRetrieveAPIView.as_view()),
 
     path('products/', ProductsAPIView.as_view()),
-    path('products/<int:pk>/', ProductRetrieveAPIView.as_view()),
+    path('products/<int:pk>/', ProductAPIView.as_view()),
 
     path('products/<int:pk>/images/', ProductImageAPIView.as_view()),
 ]

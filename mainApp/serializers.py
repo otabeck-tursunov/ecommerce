@@ -39,6 +39,12 @@ class OwnerSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'phone_number', 'email', 'company', 'address', 'created_at', 'updated_at')
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ('image',)
+
+
 class ProductSerializer(serializers.ModelSerializer):
     subCategory = SubCategoryCascadeSerializer()
     display = DisplaySerializer()
@@ -46,12 +52,13 @@ class ProductSerializer(serializers.ModelSerializer):
     ram = RAMSerializer()
     videocard = VideoCardSerializer()
     camera = CameraSerializer()
+    discount = DiscountSerializer()
 
     class Meta:
         model = Product
         fields = (
-            'id', 'name', 'description', 'price', 'amount', 'discount', 'guaranty', 'deliver', 'owner', 'subCategory',
-            'created_at', 'updated_at', 'display', 'processor', 'ram', 'videocard', 'camera')
+            'id', 'name', 'description', 'price', 'amount', 'discount', 'guaranty', 'country', 'deliver', 'owner',
+            'subCategory', 'created_at', 'updated_at', 'display', 'processor', 'ram', 'videocard', 'camera')
 
 
 class ProductCascadeSerializer(serializers.ModelSerializer):
@@ -60,12 +67,3 @@ class ProductCascadeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('id', 'name', 'subCategory')
-
-
-class ProductImageSerializer(serializers.ModelSerializer):
-    product = ProductCascadeSerializer()
-
-    class Meta:
-        model = ProductImage
-        fields = ('id', 'image', 'product', 'created_at', 'updated_at')
-
