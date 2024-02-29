@@ -5,6 +5,11 @@ from extraApp.models import *
 admin.site.register([Category, SubCategory, Owner])
 
 
+class PropertyInline(admin.TabularInline):
+    model = ProductProperty
+    fields = ('name', 'context')
+
+
 class DiscountInline(admin.TabularInline):
     model = Discount
     fields = ('amount', 'deadline')
@@ -45,7 +50,8 @@ class CameraInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     model = Product
-    inlines = [DiscountInline, ProductImageInline, DisplayInline, ProcessorInline, RAMInline, VideoCardInline, CameraInline]
+    inlines = [PropertyInline, DiscountInline, ProductImageInline, DisplayInline, ProcessorInline, RAMInline,
+               VideoCardInline, CameraInline]
 
 
 admin.site.register(Product, ProductAdmin)

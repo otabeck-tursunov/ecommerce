@@ -45,6 +45,12 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = ('image',)
 
 
+class ProductPropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductProperty
+        fields = ('name', 'context')
+
+
 class ProductSerializer(serializers.ModelSerializer):
     subCategory = SubCategoryCascadeSerializer()
     display = DisplaySerializer()

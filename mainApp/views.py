@@ -94,6 +94,12 @@ class ProductsAPIView(APIView):
                     img_sub.append(image.image.url)
             product_data['img_main'] = img_main
             product_data['img_sub'] = img_sub
+
+            # barcha propertylar
+            properties = ProductProperty.objects.filter(product=product)
+            property_serializer = ProductPropertySerializer(properties, many=True)
+            product_data['properties'] = property_serializer.data
+
             data.append(product_data)
         return Response(data, status=status.HTTP_200_OK)
 
@@ -113,10 +119,15 @@ class ProductAPIView(APIView):
                     img_main = image.image.url
                 else:
                     img_sub.append(image.image.url)
+
+            properties = ProductProperty.objects.filter(product=product)
+            property_serializer = ProductPropertySerializer(properties, many=True)
+
             data = {
                 'product': product_serializer.data,
                 'img_main': img_main,
-                'img_sub': img_sub
+                'img_sub': img_sub,
+                'properties': property_serializer.data
             }
             return Response(data, status=status.HTTP_200_OK)
         except Product.DoesNotExist:

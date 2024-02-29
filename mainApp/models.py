@@ -54,3 +54,11 @@ class ProductImage(CoreModel):
 
     def __str__(self):
         return self.product.name
+
+
+class ProductProperty(CoreModel):
+    name = models.CharField(max_length=255)
+    context = models.CharField(max_length=1024)
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
