@@ -76,11 +76,19 @@ class ProductsAPIView(APIView):
                 in_=openapi.IN_QUERY,
                 description="Filter by SubCategory ID",
                 type=openapi.TYPE_INTEGER
-            )
+            ),
         ],
     )
     def get(self, request):
+        category_id = request.query_params.get("category_id")
+        subCategory_id = request.query_params.get("subCategory_id")
+        product_id = request.query_params.get("product_id")
+        quantity = request.query_params.get("quantity")
         products = Product.objects.all()
+        if category_id is not None:
+            products = products.filter(subCategory__category__id=category_id)
+        if subCategory_id is not None:
+            products = products.filter(subCategory__id=subCategory_id)
         data = []
         for product in products:
             product_data = ProductSerializer(product).data

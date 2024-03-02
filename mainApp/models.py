@@ -36,6 +36,7 @@ class Product(CoreModel):
     price = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0)])
     amount = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(0)])
     guaranty = models.CharField(max_length=30, blank=True, null=True)
+    status = models.CharField(max_length=30, blank=True, null=True)
     country = models.CharField(max_length=255, blank=True, null=True)
     deliver = models.CharField(max_length=30, blank=True, null=True)
     battery = models.BooleanField(blank=True, null=True)
