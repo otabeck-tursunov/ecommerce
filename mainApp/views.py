@@ -77,18 +77,31 @@ class ProductsAPIView(APIView):
                 description="Filter by SubCategory ID",
                 type=openapi.TYPE_INTEGER
             ),
+            openapi.Parameter(
+                name="discount",
+                in_=openapi.IN_QUERY,
+                description="Filter by Discount",
+                type=openapi.TYPE_BOOLEAN
+            )
         ],
     )
     def get(self, request):
         category_id = request.query_params.get("category_id")
         subCategory_id = request.query_params.get("subCategory_id")
-        product_id = request.query_params.get("product_id")
-        quantity = request.query_params.get("quantity")
+        discount = request.query_params.get("discount")
         products = Product.objects.all()
         if category_id is not None:
             products = products.filter(subCategory__category__id=category_id)
         if subCategory_id is not None:
             products = products.filter(subCategory__id=subCategory_id)
+        if discount is not None:
+            discounts = Discount.objects.values_list("product", flat=True)
+            products1 = products.filter(id__in=discounts)
+            if str(discount).capitalize() == 'True':
+                products = products1
+            elif str(discount).capitalize() == 'False':
+                products = products.difference(products1)
+
         data = []
         for product in products:
             product_data = ProductSerializer(product).data
