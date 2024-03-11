@@ -32,6 +32,7 @@ class Owner(CoreModel):
 
 class Product(CoreModel):
     name = models.CharField(max_length=255)
+    brand = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0)])
     amount = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(0)])
