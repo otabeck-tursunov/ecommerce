@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -51,6 +53,7 @@ class Order(CoreModel):
 
 
 class OrderProduct(CoreModel):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(default=1)

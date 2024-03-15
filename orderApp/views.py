@@ -1,9 +1,10 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import *
 
 from .models import *
 from .serializers import *
@@ -36,3 +37,60 @@ class CitiesAPIView(APIView):
         serializer = CitySerializer(cities, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class CartAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request):
+        carts = Cart.objects.filter(user=request.user)
+        serializer = CartSerializer(carts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = CartSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CartRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = CartSerializer
+
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.user)
+
+
+class OrdersAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request):
+        orders = Order.objects.filter(user=request.user)
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = OrderSerializer(data=request.data)
+        carts = Cart.objects.filter(user=request.user)
+        if carts.count() == 0:
+            return Response({'message': 'Cart is empty'}, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            order = Order.objects.get(id=serializer.data['id'])
+            for cart in carts:
+                OrderProduct.objects.create(
+                    user=request.user,
+                    product=cart.product,
+                    amount=cart.amount,
+                    order=order
+                )
+            carts.delete()
+            orderProducts = OrderProductSerializer(OrderProduct.objects.filter(user=request.user, order=order), many=True)
+            response = {
+                'message': 'Successfully created order',
+                'order': serializer.data,
+                'order_products': orderProducts.data
+            }
+            return Response(response, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
