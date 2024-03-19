@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import *
 
-from .models import *
 from .serializers import *
 
 
@@ -59,7 +58,7 @@ class CartRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     serializer_class = CartSerializer
 
     def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
+        return Cart.objects.filter(user__id=self.request.user.id)
 
 
 class OrdersAPIView(APIView):
@@ -86,11 +85,19 @@ class OrdersAPIView(APIView):
                     order=order
                 )
             carts.delete()
-            orderProducts = OrderProductSerializer(OrderProduct.objects.filter(user=request.user, order=order), many=True)
+            orderProducts = OrderProduct.objects.filter(user=request.user, order=order)
+            orderProducts_serializer = OrderProductSerializer(orderProducts, many=True)
+            total_price = 0
+            for orderProduct in orderProducts:
+                total_price += orderProduct.product.price * orderProduct.amount
+                print(total_price)
+            order.total_price = total_price
+            order.save()
+            serializer = OrderSerializer(order)
             response = {
                 'message': 'Successfully created order',
                 'order': serializer.data,
-                'order_products': orderProducts.data
+                'order_products': orderProducts_serializer.data
             }
             return Response(response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

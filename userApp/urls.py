@@ -8,6 +8,4 @@ urlpatterns = [
     path('delete/', UserDestroyAPIView.as_view()),
     path('retrieve/', UserRetrieveAPIView.as_view()),
 
-    path('rating/create/', RatingCreateAPIView.as_view()),
-
 ]

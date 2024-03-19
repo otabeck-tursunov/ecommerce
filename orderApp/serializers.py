@@ -30,12 +30,6 @@ class CityCascadeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'region')
 
 
-class LikedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Liked
-        fields = '__all__'
-
-
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart

@@ -95,10 +95,92 @@ def hisobla(galaba, maglubiyat):  # hisobla(12, 18)
     return galaba_foiz
 
 
-print(hisobla(1, 4))
+# print(hisobla(1, 4))
 
 # ctrl + alt + l
 # shift + enter
 # alt + cursor
-a = int(input("a = "))
-b = int(input("b = "))
+# a = int(input("a = "))
+# b = int(input("b = "))
+
+def iscouple(text):
+    d = {}
+    for i in range(len(text)):
+        if text[i] in d.keys():
+            d[text[i]] += 1
+        else:
+            d[text[i]] = 1
+    values_list = list(d.values())
+    values_unique = list(set(values_list))
+    if len(values_unique) == 1:
+        return True
+    elif len(values_unique) == 2:
+        if abs(values_unique[0] - values_unique[1]) == 1:
+            katta = max(values_unique)
+            if values_list.count(katta) == 1:
+                return True
+            return True
+        return False
+    return False
+
+
+# print(iscouple("aaaaabbbbbbccccc"))
+# 3
+
+
+kub_daraja = lambda son: son ** 3
+
+
+def kubdaraja(son):
+    return son ** 3
+
+
+# print(kub_daraja(2))
+# print(kubdaraja(2))
+
+
+def yigindi(son):  # 345   -> 5, 34
+    if son < 10:
+        return son
+    else:
+        q = son % 10
+        return q + yigindi(son // 10)
+
+
+def kun_soni(yil):
+    if yil % 4 == 0:
+        if yil % 100 == 0 and yil % 400 != 0:
+            return 365
+        else:
+            return 366
+    else:
+        return 365
+
+
+def rang(a: int, b: int):
+    if (a + b) % 2 == 0:
+        print("qora")
+    else:
+        print("oq")
+
+
+def tekshir(x1, y1, x2, y2):
+    if (x1 + x2) % 2 == (y1 + y2) % 2:
+        return True
+    else:
+        return False
+
+
+def ruh(x1, y1, x2, y2):
+    if x1 == x2 or y1 == y2:
+        return True
+    return False
+
+
+def shoh(x1, y1, x2, y2):
+    if abs(x1 - x2) <= 1 and abs(y1 - y2) <= 1:
+        return True
+    else:
+        return False
+
+print(shoh(4, 2, 3, 1))

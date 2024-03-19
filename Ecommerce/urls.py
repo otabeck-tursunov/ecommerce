@@ -21,12 +21,15 @@ schema_view = get_schema_view(
     public=True,
 )
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('main/', include('mainApp.urls')),
     path('order/', include('orderApp.urls')),
     path('user/', include('userApp.urls')),
     path('extra/', include('extraApp.urls')),
+    path('action/', include('actionApp.urls')),
 
     # SimpleJWT Token
     path('token/', TokenObtainPairView.as_view()),
@@ -34,4 +37,5 @@ urlpatterns = [
 
     # Swagger docs
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Media

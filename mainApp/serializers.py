@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from userApp.models import Rating
 from extraApp.serializers import *
 from .models import *
 

@@ -1,4 +1,3 @@
-from django.db import models
 from django.contrib.auth.models import User
 
 from coreApp.models import CoreModel
@@ -20,10 +19,3 @@ class CustomUser(CoreModel):
         return self.user.username
 
 
-class Rating(CoreModel):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ratings')
-    rating = models.PositiveSmallIntegerField(default=5, validators=[MinValueValidator(0), MaxValueValidator(5)])
-
-    def __str__(self):
-        return f"{self.product.name} - {self.rating}"
